@@ -1,14 +1,11 @@
-
-
 {
+  "author": "Valentin Magry",
+  "name": "magrys-spotify-data",
+  "description": "Student app to learn how to manage data",
+  "version": "0.0.0",
   "scripts": {
     "start": "node app.js"
-     },
-     
-  "author": "Spotify",
-  "name": "web-api-auth-examples",
-  "description": "",
-  "version": "0.0.2",
+  },
   "dependencies": {
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.4",
