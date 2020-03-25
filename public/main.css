@@ -1,0 +1,45 @@
+/* Nav bar */
+/* Nav bar */
+.navbar {
+    position: fixed;
+    justify-content: center;
+  
+    width: 100%;
+    padding: 10px 0;
+  
+    background: white;
+    box-shadow: 0 0.25rem 1rem rgba(48, 55, 66, 0.15);
+    align-items: stretch;
+    display: flex;
+    display: -ms-flexbox;
+    -ms-flex-align: stretch;
+    -ms-flex-pack: justify;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .navbar section {
+    width: 600px;
+  }
+
+  .navbar section:first-child{
+      float: left;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 50px;
+    margin: 0 auto;
+  }
+
+  .vertical-center{
+    position: relative;
+    top: 20vh;
+  }
+
+  .align-items{
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }

@@ -1,8 +1,9 @@
 <!doctype html>
 <html>
   <head>
-    <title>Example of the Authorization Code flow with Spotify</title>
+    <title>Magry's Spotify Data App</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
     <style type="text/css">
       #login, #loggedin {
         display: none;
@@ -17,11 +18,23 @@
   </head>
 
   <body>
-    <div class="container">
-      <div id="login">
-        <h1>This is an example of the Authorization Code flow</h1>
-        <a href="/login" class="btn btn-primary">Log in with Spotify</a>
-      </div>
+
+    <header class="navbar">
+        <section class="navbar-section">
+          <h1>Magry's Spotify Data App</h1>
+        </section>
+
+        <section class="navbar-section align-items">
+          <div id="login">
+            <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+          </div>
+        </section>
+
+      </header>
+
+
+    <div class="container vertical-center">
+  
       <div id="loggedin">
         <div id="user-profile">
         </div>

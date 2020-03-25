@@ -15,9 +15,9 @@ var cookieParser = require('cookie-parser');
 
 var client_id = '4489a6aedc394575b1c823bed67050e1'; // Your client id
 var client_secret = 'c9d7e279aea84ba99cbe28de4572d3c1'; // Your secret
-var redirect_uri = 'https://magryz-spotify-data.herokuapp.com/callback'; // Your redirect uri
-
-var port = process.env.PORT || 8080
+//var redirect_uri = 'https://magryz-spotify-data.herokuapp.com/callback'; // Your redirect uri
+var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
+var port = process.env.PORT || 8888
 
 /**
  * Generates a random string containing numbers and letters
