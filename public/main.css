@@ -26,7 +26,7 @@
       float: left;
   }
 
-  .container {
+  .content {
     width: 100%;
     max-width: 1200px;
     padding: 50px;
@@ -42,4 +42,19 @@
     align-items: center;
     display: flex;
     justify-content: center;
+  }
+
+  .pp{
+    border-radius: 50%;
+    float: right;
+    margin: 15px;
+  }
+
+  a{
+    color: unset;
+  }
+
+  a:hover{
+    text-decoration: underline;
+    color: unset;
   }
