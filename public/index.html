@@ -44,6 +44,9 @@
 
       <div class="content vertical-center" id="main-content">
         <div id="top50FR"></div>
+        <div id="top50User"></div>
+
+  
       </div>
 
       <div class="content vertical-center align-items" id="connect-content">
@@ -70,7 +73,10 @@
 
       <!-- Playlist Template -->
       <script id="playlist-template" type="text/x-handlebars-template">
-        <h3>{{name}}</h3>
+        <div class="selectors">
+          <h3 class="btn selector active-btn" onclick="toggle(this, 'table')">{{name}}</h3>
+          <h3 class="btn selector" onclick="toggle(this, 'graph')">Graph</h3>
+        </div>
         <table id="tracks" class="table table-dark">
           <thead>
             <tr>
@@ -81,14 +87,14 @@
             </tr>
           </thead>
         </table>
+        <canvas id="{{id}}" class="graph" style="display: none;"></canvas>
       </script>
-
-
 
 
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <script src="connect.js"></script>
     <script src="data.js"></script>
 

@@ -74,3 +74,24 @@ body{
   #tracks th{
     text-decoration: underline;
   }
+
+  .selector{
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    margin: 0;
+    min-width: 200px;
+    color: white;
+  }
+
+  .selectors{
+    display: flex;
+  }
+
+  .active-btn{
+    background-color: #343a40;
+  }
+
+  .graph{
+    width: 100%;
+    background-color: #343a40;
+  }

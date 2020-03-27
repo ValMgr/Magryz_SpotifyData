@@ -1,11 +1,6 @@
 var token; // Acces token, accessible to data.js
 
 (function() {
-
-    /**
-     * Obtains parameters from the hash of the URL
-     * @return Object
-     */
     function getHashParams() {
       var hashParams = {};
       var e, r = /([^&;=]+)=?([^&;]*)/g,
