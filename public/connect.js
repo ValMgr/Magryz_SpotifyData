@@ -25,6 +25,7 @@ var token; // Acces token, accessible to data.js
         refresh_token = params.refresh_token,
         error = params.error;
 
+
     token = access_token;
 
     if (error) {
