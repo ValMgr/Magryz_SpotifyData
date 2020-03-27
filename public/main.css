@@ -1,14 +1,30 @@
-/* Nav bar */
+@font-face {
+  font-family: 'Gotham';
+  src: url('font/Gotham-Medium.woff2') format('woff2'),
+      url('font/Gotham-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+body{
+  background-color: #1b1f22;
+  color: white;
+  font-family: Gotham;
+}
+
+
+
 /* Nav bar */
 .navbar {
     position: fixed;
     justify-content: center;
-  
+    z-index: 10;
     width: 100%;
     padding: 10px 0;
   
-    background: white;
-    box-shadow: 0 0.25rem 1rem rgba(48, 55, 66, 0.15);
+    background: #222629;
+    box-shadow: 0 0.25rem 1rem rgba(6, 201, 16, 0.300);
     align-items: stretch;
     display: flex;
     display: -ms-flexbox;
@@ -24,6 +40,7 @@
 
   .navbar section:first-child{
       float: left;
+      margin-left: 50px;
   }
 
   .content {
@@ -57,4 +74,13 @@
   a:hover{
     text-decoration: underline;
     color: unset;
+  }
+
+
+  #connect-content{
+    flex-direction: column;
+  }
+
+  #tracks th{
+    text-decoration: underline;
   }

@@ -52,7 +52,9 @@ var token; // Acces token, accessible to data.js
 
               $('#login').hide();
               $('#loggedin').show();
-              $('.content').show();
+              $('#main-content').show();
+              $('#connect-content').hide();
+
               
             }
         });
@@ -60,23 +62,10 @@ var token; // Acces token, accessible to data.js
           // render initial screen
           $('#login').show();
           $('#loggedin').hide();
-          $('.content').hide();
-      }
+          $('#main-content').hide();
+          $('#connect-content').show();
 
-      /*document.getElementById('obtain-new-token').addEventListener('click', function() {
-        $.ajax({
-          url: '/refresh_token',
-          data: {
-            'refresh_token': refresh_token
-          }
-        }).done(function(data) {
-          access_token = data.access_token;
-          oauthPlaceholder.innerHTML = oauthTemplate({
-            access_token: access_token,
-            refresh_token: refresh_token
-          });
-        });
-      }, false);*/
+      }
     }
   })();
 

@@ -2,8 +2,7 @@
 <html>
   <head>
     <title>Magry's Spotify Data App</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">    <link rel="stylesheet" href="main.css">
     <script src="https://kit.fontawesome.com/a80682f62e.js" crossorigin="anonymous"></script>    <style type="text/css">
       #login, #loggedin {
         display: none;
@@ -37,11 +36,19 @@
           <div id="oauth">
           </div>
         </div>
-      </header>
+    </header>
 
-      <div class="content vertical-center">
+      <div class="content vertical-center" id="main-content">
         <div id="top50FR"></div>
       </div>
+
+      <div class="content vertical-center align-items" id="connect-content">
+        <h2>Please connect to your Spotify Account</h2>
+        <a href="/login" class="btn btn-success">Login <i class="fab fa-spotify"></i></a>
+      </div>
+
+
+
 
 
       <!-- Get user Info Template -->
@@ -60,19 +67,27 @@
       <!-- Playlist Template -->
       <script id="playlist-template" type="text/x-handlebars-template">
         <h3>{{name}}</h3>
-        <p>{{tracks.items.total}}</p>
+        <table id="tracks" class="table table-dark">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Track</th>
+              <th scope="col">Album</th>
+              <th scope="col">Artist</th>
+            </tr>
+          </thead>
+        </table>
       </script>
 
-      <script id="tracks-template" type="text/x-handlebars-template">
 
-        
-      </script>
+
 
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="connect.js"></script>
     <script src="data.js"></script>
+
 
   </body>
 </html>
