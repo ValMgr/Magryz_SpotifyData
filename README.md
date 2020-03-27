@@ -1,6 +1,7 @@
 # Magry's Spotify Data App
 
 https://magryz-spotify-data.herokuapp.com/
+
 This app lets compare user's top 50 with world / countries top 50
 
 ## Running App
