@@ -242,7 +242,7 @@ if(token != undefined){
   
       // Get top 50 User playlist
       $.ajax({
-          url: 'https://api.spotify.com/v1/me/top/tracks?limit=50',
+          url: 'https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50',
           headers: {
             'Authorization': 'Bearer ' + token
           },
