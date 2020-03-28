@@ -1,3 +1,8 @@
+/** function.js 
+ *  All simple function needed in other scripts or used to interact with app
+ *  Author: Valentin Magry
+ */
+
 // Simple function to get random int between 0 and given max
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));

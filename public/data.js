@@ -1,3 +1,8 @@
+/** data.js
+ *  All scripts used to get data, read data, and draw charts
+ *  Author: Valentin Magry
+ */
+
 // Function for TOP 50 FR - not yet based on user location but the idea is to get user location and got top 50 of his country
 (function() {
 // Check if connected (If token is available)
@@ -21,6 +26,7 @@ if(token != undefined){
           // Creating playlist array with tracks object
           var tracks;
           var allGenres = [];
+          var table = document.getElementById("table_"+top50FR.id);
           for (var i = 0; i < top50FR.tracks.total; i++) {
 
               // For each track, get artist genre and add them to allGenres[] array
@@ -48,18 +54,8 @@ if(token != undefined){
                 };
 
               // Creating table from tracks objects
-              var table = document.getElementById("table_"+top50FR.id);
-              var row = table.insertRow(i+1);
-              var cell0 = row.insertCell(0)
-              var cell1 = row.insertCell(1);
-              var cell2 = row.insertCell(2);
-              var cell3 = row.insertCell(3);
-  
-              var j = i+1;
-              cell0.innerHTML = j;
-              cell1.innerHTML = tracks.tracksName;
-              cell2.innerHTML = tracks.tracksAlbum;
-              cell3.innerHTML = tracks.tracksArtist;
+              CreateTable(table, i, tracks.tracksName, tracks.tracksAlbum, tracks.tracksArtist);
+
 
           }
 
@@ -111,30 +107,9 @@ if(token != undefined){
 
 
           // Creating graph from Genres array
-
           var ctx = document.getElementById('graph_'+top50FR.id).getContext('2d');
-          var ChartTop50FR = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                  labels: genreCountG,
-                  datasets: [{
-                      label: '# of genres',
-                      data: genreCountC,
-                      backgroundColor: Color,
-                      borderColor: ColorB,
-                      borderWidth: 1
-                  }]
-              },
-              options: {
-                  scales: {
-                      yAxes: [{
-                          ticks: {
-                              beginAtZero: true
-                          }
-                      }]
-                  }
-              }
-          });
+          DrawChart(ctx, genreCountG, genreCountC, Color, ColorB);
+
 
         }, 1000);
 
@@ -165,6 +140,8 @@ if(token != undefined){
             // Creating playlist array with tracks object
             var tracks;
             var allGenres = [];
+            var table = document.getElementById("table_"+top50World.id); // Table
+
             for (var i = 0; i < top50World.tracks.total; i++) {
   
                 // For each track, get artist genre and add them to allGenres[]
@@ -189,20 +166,8 @@ if(token != undefined){
                       tracksAlbum: top50World.tracks.items[i].track.album.name,
                       tracksArtist: top50World.tracks.items[i].track.artists[0].name
                   };
-  
-                // Creating table from tracks objects
-                var table = document.getElementById("table_"+top50World.id);
-                var row = table.insertRow(i+1);
-                var cell0 = row.insertCell(0)
-                var cell1 = row.insertCell(1);
-                var cell2 = row.insertCell(2);
-                var cell3 = row.insertCell(3);
-    
-                var j = i+1;
-                cell0.innerHTML = j;
-                cell1.innerHTML = tracks.tracksName;
-                cell2.innerHTML = tracks.tracksAlbum;
-                cell3.innerHTML = tracks.tracksArtist;
+
+                  CreateTable(table, i, tracks.tracksName, tracks.tracksAlbum, tracks.tracksArtist);
   
             }
   
@@ -255,28 +220,8 @@ if(token != undefined){
   
             // Creating graph from Genres array
             var ctx = document.getElementById("graph_"+top50World.id).getContext('2d');
-            var ChartTop50FR = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: genreCountG,
-                    datasets: [{
-                        label: '# of genres',
-                        data: genreCountC,
-                        backgroundColor: Color,
-                        borderColor: ColorB,
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
+            DrawChart(ctx, genreCountG, genreCountC, Color, ColorB);
+
   
           }, 1000);
   
@@ -307,6 +252,7 @@ if(token != undefined){
             //Creating playlist array with tracks object
             var tracks;
             var allGenres = [];
+            var table = document.getElementById("table_user");
             for (var i = 0; i < top50User.total; i++) {
   
                 // For each track, get artist genre and add them to allGenres[]
@@ -333,18 +279,8 @@ if(token != undefined){
                   };
   
                 // Creating table from tracks objects
-                var table = document.getElementById("table_user");
-                var row = table.insertRow(i+1);
-                var cell0 = row.insertCell(0)
-                var cell1 = row.insertCell(1);
-                var cell2 = row.insertCell(2);
-                var cell3 = row.insertCell(3);
-    
-                var j = i+1;
-                cell0.innerHTML = j;
-                cell1.innerHTML = tracks.tracksName;
-                cell2.innerHTML = tracks.tracksAlbum;
-                cell3.innerHTML = tracks.tracksArtist;
+                CreateTable(table, i, tracks.tracksName, tracks.tracksAlbum, tracks.tracksArtist);
+
   
             }
   
@@ -393,32 +329,10 @@ if(token != undefined){
               
               }
   
-  
-  
+
             // Creating graph from Genres array
             var ctx = document.getElementById("graph_user").getContext('2d');
-            var ChartTop50FR = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: genreCountG,
-                    datasets: [{
-                        label: '# of genres',
-                        data: genreCountC,
-                        backgroundColor: Color,
-                        borderColor: ColorB,
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
+            DrawChart(ctx, genreCountG, genreCountC, Color, ColorB);
   
           }, 1000);
   
@@ -428,6 +342,45 @@ if(token != undefined){
   }
   })();
 
+// Funtion to create table with 4 column: index, data1, data2 and data3
+// and as many row as needed
+function CreateTable(table, index, data1, data2, data3){
+  // Creating table from tracks objects       
+  var row = table.insertRow(index+1);
+  var cell0 = row.insertCell(0)
+  var cell1 = row.insertCell(1);
+  var cell2 = row.insertCell(2);
+  var cell3 = row.insertCell(3);
 
+  var j = index+1;
+  cell0.innerHTML = j;
+  cell1.innerHTML = data1;
+  cell2.innerHTML = data2;
+  cell3.innerHTML = data3;
+}
 
-
+// Function to draw bar charts, giving: canvas, labels, data, colorBackground and colorBorder
+function DrawChart(ctx, labels, data, colorBackground, colorBorder){
+  var newChar = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: '# of genres',
+            data: data,
+            backgroundColor: colorBackground,
+            borderColor: colorBorder,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+}

@@ -1,3 +1,10 @@
+/** connect.js 
+ *  All scripts managing connection systeme, token option, and spotify profil data
+ *  Author: Valentin Magry
+ */
+
+
+
 var token; // Acces token, accessible to data.js
 
 (function() {
