@@ -2,9 +2,6 @@
 (function() {
 // Check if connected (If token is available)
 if(token != undefined){
-
-  var top50FR;
-
     // Setup playlist template
     var playlistSource = document.getElementById('playlist-template').innerHTML,
         playlistTemplate = Handlebars.compile(playlistSource),
@@ -12,28 +9,30 @@ if(token != undefined){
 
     // Get top 50 France playlist
     $.ajax({
+        // GET request to Spotify's API
         url: 'https://api.spotify.com/v1/playlists/37i9dQZEVXbIPWwFssbupI',
         headers: {
           'Authorization': 'Bearer ' + token
         },
-        success: function(response) {
-          top50FR = response;
+        success: function(top50FR) {
+          // Get JSON data stored in 'top50FR'
           playlistPlaceholder.innerHTML = playlistTemplate(top50FR);
 
           // Creating playlist array with tracks object
           var tracks;
           var allGenres = [];
-          for (var i = 0; i < response.tracks.total; i++) {
+          for (var i = 0; i < top50FR.tracks.total; i++) {
 
-              // For each track, get artist genre and add them to allGenres[]
-              id = response.tracks.items[i].track.artists[0].id;
+              // For each track, get artist genre and add them to allGenres[] array
+              id = top50FR.tracks.items[i].track.artists[0].id;
               $.ajax({
+                // GET request to Spotify's API
                 url: 'https://api.spotify.com/v1/artists/' + id,
                 headers: {
                   'Authorization': 'Bearer ' + token
                 },
                 success: function(result) {
-
+                  // Add all genres collected to the array
                   for(var j=0;j<result.genres.length;j++){
                     allGenres.push(result.genres[j]);
                   }
@@ -43,13 +42,13 @@ if(token != undefined){
 
                 // Creating tracks object
                 tracks = {
-                    tracksName: response.tracks.items[i].track.name,
-                    tracksAlbum: response.tracks.items[i].track.album.name,
-                    tracksArtist: response.tracks.items[i].track.artists[0].name
+                    tracksName: top50FR.tracks.items[i].track.name,
+                    tracksAlbum: top50FR.tracks.items[i].track.album.name,
+                    tracksArtist: top50FR.tracks.items[i].track.artists[0].name
                 };
 
               // Creating table from tracks objects
-              var table = document.getElementById("table_"+response.id);
+              var table = document.getElementById("table_"+top50FR.id);
               var row = table.insertRow(i+1);
               var cell0 = row.insertCell(0)
               var cell1 = row.insertCell(1);
@@ -113,7 +112,7 @@ if(token != undefined){
 
           // Creating graph from Genres array
 
-          var ctx = document.getElementById('graph_'+response.id).getContext('2d');
+          var ctx = document.getElementById('graph_'+top50FR.id).getContext('2d');
           var ChartTop50FR = new Chart(ctx, {
               type: 'bar',
               data: {
@@ -137,7 +136,7 @@ if(token != undefined){
               }
           });
 
-        }, 900);
+        }, 1000);
 
         }
       });
@@ -148,10 +147,7 @@ if(token != undefined){
 // Function for Top 50 World
 (function() {
   // Check if connected (If token is available)
-  if(token != undefined){
-  
-    var top50World;
-  
+  if(token != undefined){ 
       // Setup playlist template
       var playlistSource = document.getElementById('playlist-template').innerHTML,
           playlistTemplate = Handlebars.compile(playlistSource),
@@ -163,17 +159,16 @@ if(token != undefined){
           headers: {
             'Authorization': 'Bearer ' + token
           },
-          success: function(response) {
-            top50World = response;
+          success: function(top50World) {
             playlistPlaceholder.innerHTML = playlistTemplate(top50World);
   
             // Creating playlist array with tracks object
             var tracks;
             var allGenres = [];
-            for (var i = 0; i < response.tracks.total; i++) {
+            for (var i = 0; i < top50World.tracks.total; i++) {
   
                 // For each track, get artist genre and add them to allGenres[]
-                id = response.tracks.items[i].track.artists[0].id;
+                id = top50World.tracks.items[i].track.artists[0].id;
                 $.ajax({
                   url: 'https://api.spotify.com/v1/artists/' + id,
                   headers: {
@@ -190,13 +185,13 @@ if(token != undefined){
   
                   // Creating tracks object
                   tracks = {
-                      tracksName: response.tracks.items[i].track.name,
-                      tracksAlbum: response.tracks.items[i].track.album.name,
-                      tracksArtist: response.tracks.items[i].track.artists[0].name
+                      tracksName: top50World.tracks.items[i].track.name,
+                      tracksAlbum: top50World.tracks.items[i].track.album.name,
+                      tracksArtist: top50World.tracks.items[i].track.artists[0].name
                   };
   
                 // Creating table from tracks objects
-                var table = document.getElementById("table_"+response.id);
+                var table = document.getElementById("table_"+top50World.id);
                 var row = table.insertRow(i+1);
                 var cell0 = row.insertCell(0)
                 var cell1 = row.insertCell(1);
@@ -259,7 +254,7 @@ if(token != undefined){
   
   
             // Creating graph from Genres array
-            var ctx = document.getElementById("graph_"+response.id).getContext('2d');
+            var ctx = document.getElementById("graph_"+top50World.id).getContext('2d');
             var ChartTop50FR = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -283,7 +278,7 @@ if(token != undefined){
                 }
             });
   
-          }, 900);
+          }, 1000);
   
           }
         });
@@ -295,8 +290,6 @@ if(token != undefined){
 (function() {
   // Check if connected (If token is available)
   if(token != undefined){
-
-    var top50User;
       // Setup playlist template
       var userTrackSource = document.getElementById('user-tracks-template').innerHTML,
           userTrackTemplate = Handlebars.compile(userTrackSource),
@@ -308,17 +301,16 @@ if(token != undefined){
           headers: {
             'Authorization': 'Bearer ' + token
           },
-          success: function(response) {
-            top50User = response;
+          success: function(top50User) {
             userTrackPlaceholder.innerHTML = userTrackTemplate(top50User);
   
             //Creating playlist array with tracks object
             var tracks;
             var allGenres = [];
-            for (var i = 0; i < response.total; i++) {
+            for (var i = 0; i < top50User.total; i++) {
   
                 // For each track, get artist genre and add them to allGenres[]
-                id = response.items[i].artists[0].id;
+                id = top50User.items[i].artists[0].id;
                 $.ajax({
                   url: 'https://api.spotify.com/v1/artists/' + id,
                   headers: {
@@ -335,9 +327,9 @@ if(token != undefined){
   
                   // Creating tracks object
                   tracks = {
-                      tracksName: response.items[i].name,
-                      tracksAlbum: response.items[i].album.name,
-                      tracksArtist: response.items[i].artists[0].name
+                      tracksName: top50User.items[i].name,
+                      tracksAlbum: top50User.items[i].album.name,
+                      tracksArtist: top50User.items[i].artists[0].name
                   };
   
                 // Creating table from tracks objects
@@ -428,7 +420,7 @@ if(token != undefined){
                 }
             });
   
-          }, 900);
+          }, 1000);
   
           }
         });
