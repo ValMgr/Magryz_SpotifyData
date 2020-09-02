@@ -42,11 +42,11 @@
     </header>
 
       <div class="content vertical-center" id="main-content">
-        <div id="top50World"></div>
-        <div class="space"></div> <!-- C'est un peu de la triche -->
-        <div id="top50FR"></div>
-        <div class="space"></div> <!-- Lui aussi -->
-        <div id="top50User"></div>
+        <div class="chart" id="top50World"></div>
+        <!-- <div class="space"></div> C'est un peu de la triche -->
+        <div class="chart" id="top50FR"></div>
+        <!-- <div class="space"></div> Lui aussi -->
+        <div class="chart" id="top50User"></div>
 
   
       </div>
@@ -77,10 +77,10 @@
       <!-- Playlist Template -->
       <script id="playlist-template" type="text/x-handlebars-template">
         <div class="selectors">
-          <h3 class="btn selector active-btn" onclick="toggle(this, 'table')">{{name}}</h3>
-          <h3 class="btn selector" onclick="toggle(this, 'graph')">Chart</h3>
+          <h3 class="btn selector" onclick="toggle(this, 'table')">{{name}}</h3>
+          <h3 class="btn selector active-btn" onclick="toggle(this, 'graph')">Chart</h3>
         </div>
-        <table id="table_{{id}}" class="table table-dark">
+        <table id="table_{{id}}" class="table table-dark" style="display: none;">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -90,16 +90,16 @@
             </tr>
           </thead>
         </table>
-        <canvas id="graph_{{id}}" class="graph" style="display: none;"></canvas>
+        <canvas id="graph_{{id}}" class="graph"></canvas>
       </script>
 
        <!-- User Tracks Template -->
        <script id="user-tracks-template" type="text/x-handlebars-template">
         <div class="selectors">
-          <h3 class="btn selector active-btn" onclick="toggle(this, 'table')">User Top 50</h3>
-          <h3 class="btn selector" onclick="toggle(this, 'graph')">Chart</h3>
+          <h3 class="btn selector" onclick="toggle(this, 'table')">User Top 50</h3>
+          <h3 class="btn selector active-btn" onclick="toggle(this, 'graph')">Chart</h3>
         </div>
-        <table id="table_user" class="table table-dark">
+        <table id="table_user" class="table table-dark" style="display: none;">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -109,7 +109,7 @@
             </tr>
           </thead>
         </table>
-        <canvas id="graph_user" class="graph" style="display: none;"></canvas>
+        <canvas id="graph_user" class="graph"></canvas>
       </script>
 
 
@@ -118,8 +118,9 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <script src="connect.js"></script>
-    <script src="data.js"></script>
     <script src="function.js"></script>
+    <script src="data.js"></script>
+
 
   </body>
 </html>

@@ -104,3 +104,7 @@ body{
   .space{
     height: 10vh;
   }
+
+  .chart{
+    margin-bottom: 10vh;
+  }

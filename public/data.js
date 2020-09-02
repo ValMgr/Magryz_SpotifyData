@@ -4,123 +4,75 @@
  */
 
 // Function for TOP 50 FR - not yet based on user location but the idea is to get user location and got top 50 of his country
-(function() {
+(async function() {
 // Check if connected (If token is available)
 if(token != undefined){
     // Setup playlist template
-    var playlistSource = document.getElementById('playlist-template').innerHTML,
+    const playlistSource = document.getElementById('playlist-template').innerHTML,
         playlistTemplate = Handlebars.compile(playlistSource),
         playlistPlaceholder = document.getElementById('top50FR');
 
     // Get top 50 France playlist
-    $.ajax({
+    const Top50Data = await $.ajax({
         // GET request to Spotify's API
         url: 'https://api.spotify.com/v1/playlists/37i9dQZEVXbIPWwFssbupI',
         headers: {
           'Authorization': 'Bearer ' + token
         },
-        success: function(top50FR) {
-          // Get JSON data stored in 'top50FR'
-          playlistPlaceholder.innerHTML = playlistTemplate(top50FR);
-
-          // Creating playlist array with tracks object
-          var tracks;
-          var allGenres = [];
-          var table = document.getElementById("table_"+top50FR.id);
-          for (var i = 0; i < top50FR.tracks.total; i++) {
-
-              // For each track, get artist genre and add them to allGenres[] array
-              id = top50FR.tracks.items[i].track.artists[0].id;
-              $.ajax({
-                // GET request to Spotify's API
-                url: 'https://api.spotify.com/v1/artists/' + id,
-                headers: {
-                  'Authorization': 'Bearer ' + token
-                },
-                success: function(result) {
-                  // Add all genres collected to the array
-                  for(var j=0;j<result.genres.length;j++){
-                    allGenres.push(result.genres[j]);
-                  }
-
-                }
-              });
-
-                // Creating tracks object
-                tracks = {
-                    tracksName: top50FR.tracks.items[i].track.name,
-                    tracksAlbum: top50FR.tracks.items[i].track.album.name,
-                    tracksArtist: top50FR.tracks.items[i].track.artists[0].name
-                };
-
-              // Creating table from tracks objects
-              CreateTable(table, i, tracks.tracksName, tracks.tracksAlbum, tracks.tracksArtist);
-
-
-          }
-
-          // Set delay to make sure that 'allGenre' array are fill up
-          setTimeout(() => {
-            var genreCount = [];
-            const genre = {
-              genre: '',
-              count: 0
-            }
-
-            // For each occurences in allGenres array, if doesnt alreay exist, create it, or add 1 to count in genreCount object array
-            for(var z=0;z<allGenres.length;z++){
-              if(genreCount.find(element => element.genre == allGenres[z]) != undefined){
-                genreCount.find(element => element.genre == allGenres[z]).count ++;
-              }
-              else{
-                var newObject = Object.create(genre);
-                newObject.genre = allGenres[z];
-                newObject.count = 1;
-                genreCount.push(newObject)
-              }
-            }
-
-            var genreCountG = [];
-            var genreCountC = [];
-            var Color = [];
-            var ColorB = []
-
-            for (let index = 0; index < genreCount.length; index++) {
-              genreCountC[index] = genreCount[index].count;
-              genreCountG[index] = genreCount[index].genre;
-
-              // Get Randomly different color for each genre
-              var r = getRandomInt(255);
-              var g = getRandomInt(255);
-              var b = getRandomInt(255);
-
-              // Set background and border color
-              var rgba = 'rgba('+r+','+g+','+b+', 0.2)';
-              var rgbaB = 'rgba('+r+','+g+','+b+', 1)';
-
-              // Add them to array
-              Color.push(rgba);
-              ColorB.push(rgbaB);
-            
-            }
-
-
-
-          // Creating graph from Genres array
-          var ctx = document.getElementById('graph_'+top50FR.id).getContext('2d');
-          DrawChart(ctx, genreCountG, genreCountC, Color, ColorB);
-
-
-        }, 1000);
-
+        success: function(res) {
+            console.log("Top50's Country succesfully loaded...");
+        },
+        error: function(req, status, error){
+          console.log("Top50's County failed to load");
+          console.log(error);
         }
       });
 
+      // Get JSON data stored in 'top50FR'
+      playlistPlaceholder.innerHTML = playlistTemplate(Top50Data);
+      //Setup Top50 Table
+      const table = document.getElementById("table_"+Top50Data.id);
+      var AllGenres = [];
+
+      for (var i = 0; i < Top50Data.tracks.total; i++) {
+
+        // Creating tracks object
+        const tracks = {
+          tracksName: Top50Data.tracks.items[i].track.name,
+          tracksAlbum: Top50Data.tracks.items[i].track.album.name,
+          tracksArtist: Top50Data.tracks.items[i].track.artists[0].name
+        };
+
+        // Add new line to table from tracks objects
+        AddLine(table, i, tracks.tracksName, tracks.tracksAlbum, tracks.tracksArtist);
+
+
+        // For each track, get artist genre and add them to allGenres[] array
+        const artistID = Top50Data.tracks.items[i].track.artists[0].id;
+        await $.ajax({
+          // GET request to Spotify's API
+          url: 'https://api.spotify.com/v1/artists/' + artistID,
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+          complete: function(result) {          
+            for(var j=0;j<result.responseJSON.genres.length;j++){
+              AllGenres.push(result.responseJSON.genres[j]);
+            }       
+          },
+          error: function(req, status, error){
+            console.log("Error: Failed to load artist's genres");
+            console.log(error);
+          }
+        });
+      }
+      
+      CreateChart(AllGenres, Top50Data.id);
 }
 })();
 
-// Function for Top 50 World
-(function() {
+//Function for Top 50 World
+(async function() {
   // Check if connected (If token is available)
   if(token != undefined){ 
       // Setup playlist template
@@ -129,110 +81,67 @@ if(token != undefined){
           playlistPlaceholder = document.getElementById('top50World');
   
       // Get top 50 World playlist
-      $.ajax({
-          url: 'https://api.spotify.com/v1/playlists/37i9dQZEVXbMDoHDwVN2tF',
+      const Top50Data = await $.ajax({
+        // GET request to Spotify's API
+        url: 'https://api.spotify.com/v1/playlists/37i9dQZEVXbMDoHDwVN2tF',
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+        success: function(res) {
+            console.log("Top50's World succesfully loaded...");
+        },
+        error: function(req, status, error){
+          console.log("Top50's World failed to load");
+          console.log(error);
+        }
+      });
+
+      // Get JSON data stored in 'top50FR'
+      playlistPlaceholder.innerHTML = playlistTemplate(Top50Data);
+      //Setup Top50 Table
+      const table = document.getElementById("table_"+Top50Data.id);
+      var AllGenres = [];
+
+      for (var i = 0; i < Top50Data.tracks.total; i++) {
+
+        // Creating tracks object
+        const tracks = {
+          tracksName: Top50Data.tracks.items[i].track.name,
+          tracksAlbum: Top50Data.tracks.items[i].track.album.name,
+          tracksArtist: Top50Data.tracks.items[i].track.artists[0].name
+        };
+
+        // Add new line to table from tracks objects
+        AddLine(table, i, tracks.tracksName, tracks.tracksAlbum, tracks.tracksArtist);
+
+
+        // For each track, get artist genre and add them to allGenres[] array
+        const artistID = Top50Data.tracks.items[i].track.artists[0].id;
+        await $.ajax({
+          // GET request to Spotify's API
+          url: 'https://api.spotify.com/v1/artists/' + artistID,
           headers: {
             'Authorization': 'Bearer ' + token
           },
-          success: function(top50World) {
-            playlistPlaceholder.innerHTML = playlistTemplate(top50World);
-  
-            // Creating playlist array with tracks object
-            var tracks;
-            var allGenres = [];
-            var table = document.getElementById("table_"+top50World.id); // Table
-
-            for (var i = 0; i < top50World.tracks.total; i++) {
-  
-                // For each track, get artist genre and add them to allGenres[]
-                id = top50World.tracks.items[i].track.artists[0].id;
-                $.ajax({
-                  url: 'https://api.spotify.com/v1/artists/' + id,
-                  headers: {
-                    'Authorization': 'Bearer ' + token
-                  },
-                  success: function(result) {
-  
-                    for(var j=0;j<result.genres.length;j++){
-                      allGenres.push(result.genres[j]);
-                    }
-  
-                  }
-                });
-  
-                  // Creating tracks object
-                  tracks = {
-                      tracksName: top50World.tracks.items[i].track.name,
-                      tracksAlbum: top50World.tracks.items[i].track.album.name,
-                      tracksArtist: top50World.tracks.items[i].track.artists[0].name
-                  };
-
-                  CreateTable(table, i, tracks.tracksName, tracks.tracksAlbum, tracks.tracksArtist);
-  
-            }
-  
-            // Set delay to make sure that 'allGenre' array are fill up
-            setTimeout(() => {
-              var genreCount = [];
-              const genre = {
-                genre: '',
-                count: 0
-              }
-  
-              // For each occurences in allGenres array, if doesnt alreay exist, create it, or add 1 to count in genreCount object array
-              for(var z=0;z<allGenres.length;z++){
-                if(genreCount.find(element => element.genre == allGenres[z]) != undefined){
-                  genreCount.find(element => element.genre == allGenres[z]).count ++;
-                }
-                else{
-                  var newObject = Object.create(genre);
-                  newObject.genre = allGenres[z];
-                  newObject.count = 1;
-                  genreCount.push(newObject)
-                }
-              }
-  
-              var genreCountG = [];
-              var genreCountC = [];
-              var Color = [];
-              var ColorB = []
-  
-              for (let index = 0; index < genreCount.length; index++) {
-                genreCountC[index] = genreCount[index].count;
-                genreCountG[index] = genreCount[index].genre;
-  
-                // Get Randomly different color for each genre
-                var r = getRandomInt(255);
-                var g = getRandomInt(255);
-                var b = getRandomInt(255);
-  
-                // Set background and border color
-                var rgba = 'rgba('+r+','+g+','+b+', 0.2)';
-                var rgbaB = 'rgba('+r+','+g+','+b+', 1)';
-  
-                // Add them to array
-                Color.push(rgba);
-                ColorB.push(rgbaB);
-              
-              }
-  
-  
-  
-            // Creating graph from Genres array
-            var ctx = document.getElementById("graph_"+top50World.id).getContext('2d');
-            DrawChart(ctx, genreCountG, genreCountC, Color, ColorB);
-
-  
-          }, 1000);
-  
+          complete: function(result) {          
+            for(var j=0;j<result.responseJSON.genres.length;j++){
+              AllGenres.push(result.responseJSON.genres[j]);
+            }       
+          },
+          error: function(req, status, error){
+            console.log("Error: Failed to load artist's genres");
+            console.log(error);
           }
         });
+      }
+      
+      CreateChart(AllGenres, Top50Data.id);
   
   }
   })();
 
 // Function for Top 50 User
-(function() {
+(async function() {
   // Check if connected (If token is available)
   if(token != undefined){
       // Setup playlist template
@@ -241,146 +150,61 @@ if(token != undefined){
           userTrackPlaceholder = document.getElementById('top50User');
   
       // Get top 50 User playlist
-      $.ajax({
-          url: 'https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50',
+      const Top50Data = await $.ajax({
+        // GET request to Spotify's API
+        url: 'https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50',
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+        success: function(res) {
+            console.log("Top50's User succesfully loaded...");
+        },
+        error: function(req, status, error){
+          console.log("Top50's User User to load");
+          console.log(error);
+        }
+      });
+
+      // Get JSON data stored in 'top50FR'
+      userTrackPlaceholder.innerHTML = userTrackTemplate(Top50Data);
+      //Setup Top50 Table
+      const table = document.getElementById("table_user");
+      var AllGenres = [];
+
+      for (var i = 0; i < Top50Data.total; i++) {
+
+        // Creating tracks object
+        const tracks = {
+          tracksName: Top50Data.items[i].name,
+          tracksAlbum: Top50Data.items[i].album.name,
+          tracksArtist: Top50Data.items[i].artists[0].name
+        };
+
+        // Add new line to table from tracks objects
+        AddLine(table, i, tracks.tracksName, tracks.tracksAlbum, tracks.tracksArtist);
+
+
+        // For each track, get artist genre and add them to allGenres[] array
+        const artistID = Top50Data.items[i].artists[0].id;
+        await $.ajax({
+          // GET request to Spotify's API
+          url: 'https://api.spotify.com/v1/artists/' + artistID,
           headers: {
             'Authorization': 'Bearer ' + token
           },
-          success: function(top50User) {
-            userTrackPlaceholder.innerHTML = userTrackTemplate(top50User);
-  
-            //Creating playlist array with tracks object
-            var tracks;
-            var allGenres = [];
-            var table = document.getElementById("table_user");
-            for (var i = 0; i < top50User.total; i++) {
-  
-                // For each track, get artist genre and add them to allGenres[]
-                id = top50User.items[i].artists[0].id;
-                $.ajax({
-                  url: 'https://api.spotify.com/v1/artists/' + id,
-                  headers: {
-                    'Authorization': 'Bearer ' + token
-                  },
-                  success: function(result) {
-  
-                    for(var j=0;j<result.genres.length;j++){
-                      allGenres.push(result.genres[j]);
-                    }
-  
-                  }
-                });
-  
-                  // Creating tracks object
-                  tracks = {
-                      tracksName: top50User.items[i].name,
-                      tracksAlbum: top50User.items[i].album.name,
-                      tracksArtist: top50User.items[i].artists[0].name
-                  };
-  
-                // Creating table from tracks objects
-                CreateTable(table, i, tracks.tracksName, tracks.tracksAlbum, tracks.tracksArtist);
-
-  
-            }
-  
-            // Set delay to make sure that 'allGenre' array are fill up
-            setTimeout(() => {
-              var genreCount = [];
-              const genre = {
-                genre: '',
-                count: 0
-              }
-  
-              // For each occurences in allGenres array, if doesnt alreay exist, create it, or add 1 to count in genreCount object array
-              for(var z=0;z<allGenres.length;z++){
-                if(genreCount.find(element => element.genre == allGenres[z]) != undefined){
-                  genreCount.find(element => element.genre == allGenres[z]).count ++;
-                }
-                else{
-                  var newObject = Object.create(genre);
-                  newObject.genre = allGenres[z];
-                  newObject.count = 1;
-                  genreCount.push(newObject)
-                }
-              }
-  
-              var genreCountG = [];
-              var genreCountC = [];
-              var Color = [];
-              var ColorB = []
-  
-              for (let index = 0; index < genreCount.length; index++) {
-                genreCountC[index] = genreCount[index].count;
-                genreCountG[index] = genreCount[index].genre;
-  
-                // Get Randomly different color for each genre
-                var r = getRandomInt(255);
-                var g = getRandomInt(255);
-                var b = getRandomInt(255);
-  
-                // Set background and border color
-                var rgba = 'rgba('+r+','+g+','+b+', 0.2)';
-                var rgbaB = 'rgba('+r+','+g+','+b+', 1)';
-  
-                // Add them to array
-                Color.push(rgba);
-                ColorB.push(rgbaB);
-              
-              }
-  
-
-            // Creating graph from Genres array
-            var ctx = document.getElementById("graph_user").getContext('2d');
-            DrawChart(ctx, genreCountG, genreCountC, Color, ColorB);
-  
-          }, 1000);
-  
+          complete: function(result) {          
+            for(var j=0;j<result.responseJSON.genres.length;j++){
+              AllGenres.push(result.responseJSON.genres[j]);
+            }       
+          },
+          error: function(req, status, error){
+            console.log("Error: Failed to load artist's genres");
+            console.log(error);
           }
         });
+      }
+      
+      CreateChart(AllGenres, 'user');
   
   }
   })();
-
-// Funtion to create table with 4 column: index, data1, data2 and data3
-// and as many row as needed
-function CreateTable(table, index, data1, data2, data3){
-  // Creating table from tracks objects       
-  var row = table.insertRow(index+1);
-  var cell0 = row.insertCell(0)
-  var cell1 = row.insertCell(1);
-  var cell2 = row.insertCell(2);
-  var cell3 = row.insertCell(3);
-
-  var j = index+1;
-  cell0.innerHTML = j;
-  cell1.innerHTML = data1;
-  cell2.innerHTML = data2;
-  cell3.innerHTML = data3;
-}
-
-// Function to draw bar charts, giving: canvas, labels, data, colorBackground and colorBorder
-function DrawChart(ctx, labels, data, colorBackground, colorBorder){
-  var newChar = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: '# of genres',
-            data: data,
-            backgroundColor: colorBackground,
-            borderColor: colorBorder,
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
-});
-}
